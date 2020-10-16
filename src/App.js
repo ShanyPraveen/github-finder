@@ -1,26 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
+import NavBar from './components/layout/Navbar'
 import './App.css';
+import Users from './components/users/Users';
+import axios from 'axios'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  state = {
+    users: [],
+    loading: false
+  }
+  // componentDidMount(){
+  //   axios.get('https://api.github.com/users')
+  //   .then(res => {
+  //     console.log(res.data)
+  //   })
+  // }
+
+  async componentDidMount(){
+    this.setState({ loading: true })
+    const res = await axios.get('https://api.github.com/users')
+    this.setState({ loading: false, users: res.data})
+  }
+
+  render(){
+    return (
+      <div>
+        <nav className="navbar bg-primary">
+          <NavBar />
+        </nav>
+        <div className="container">
+        <Users loading={this.state.loading} users={this.state.users}/>
+        </div>
+      </div>
+    );
+  } 
 }
 
 export default App;
